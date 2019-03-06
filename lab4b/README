@@ -1,0 +1,13 @@
+NAME: SHEN TENG
+EMAIL: REDHAIRDRAGON@UCLA.EDU
+ID: 104758168
+
+
+lab4b.c:
+C source file for this assignment
+Makefile:
+support build check, clean, and dist.
+README: 
+this file
+
+The poll was tricky to me. And I checked lab1a. I noticed that to read once every time.

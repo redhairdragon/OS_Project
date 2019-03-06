@@ -1,0 +1,141 @@
+Total: 635 samples
+     487  76.7%  76.7%      635 100.0% spin_thread_task
+     114  18.0%  94.6%      114  18.0% __strcmp_sse42
+      14   2.2%  96.9%       78  12.3% SortedList_insert
+      14   2.2%  99.1%       69  10.9% SortedList_lookup
+       5   0.8%  99.8%        5   0.8% _init
+       1   0.2% 100.0%        1   0.2% __strlen_sse2_pminub
+       0   0.0% 100.0%      635 100.0% __clone
+       0   0.0% 100.0%      635 100.0% start_thread
+ROUTINE ====================== spin_thread_task in /w/home.13/cs/ugrad/shent/lab2b/lab2_list.c
+   487    635 Total samples (flat / cumulative)
+     .      .  196: 		}
+     .      .  197: 		pthread_mutex_unlock(&(mutexes[hash]));
+     .      .  198: 	}
+     .      .  199: 	return NULL;
+     .      .  200: }
+---
+     .      .  201: void* spin_thread_task(void* arg){
+     .      .  202: 	int id=*(int*)arg;
+     .      .  203: 	struct timespec before,after;
+     .      .  204: 
+     .      .  205: 	for(int i = 0;i<iterations;i++){
+     .      1  206: 		int hash=strlen(elems[i*thread_num+id].key)%list_num;
+     .      .  207: 
+     .      .  208: 		if(clock_gettime(CLOCK_REALTIME,&before)==-1){perror("Gettime failed");exit(1);}
+   341    341  209: 		while (__sync_lock_test_and_set(&(spin_locks[hash]), 1));
+     .      .  210: 		if(clock_gettime(CLOCK_REALTIME,&after)==-1){perror("Gettime failed");exit(1);}
+     .      .  211: 		lock_time_per_thread[id]+=after.tv_sec*NANO_PER_SEC+after.tv_nsec
+     .      .  212: 			-before.tv_sec*NANO_PER_SEC-before.tv_nsec;
+     .      .  213: 
+     .     78  214: 		SortedList_insert(&(lists[hash]),elems+i*thread_num+id);
+     .      .  215: 		__sync_lock_release(&(spin_locks[hash]));
+     .      .  216: 	}
+     .      .  217: 
+     .      .  218: 	int len=0;
+     .      .  219: 	for(int i=0;i<list_num;i++){
+     .      .  220: 		if(clock_gettime(CLOCK_REALTIME,&before)==-1){perror("Gettime failed");exit(1);}
+     .      .  221: 		while (__sync_lock_test_and_set(&(spin_locks[i]), 1));
+     .      .  222: 		if(clock_gettime(CLOCK_REALTIME,&after)==-1){perror("Gettime failed");exit(1);}
+     .      .  223: 		lock_time_per_thread[id]+=after.tv_sec*NANO_PER_SEC+after.tv_nsec
+     .      .  224: 			-before.tv_sec*NANO_PER_SEC-before.tv_nsec;
+     .      .  225: 
+     .      .  226: 		len+=SortedList_length(&(lists[i]));
+     .      .  227: 		__sync_lock_release(&(spin_locks[i]));
+     .      .  228: 	}
+     .      .  229: 
+     .      .  230: 	for(int i = 0;i<iterations;i++){
+     .      .  231: 		int hash=strlen(elems[i*thread_num+id].key)%list_num;
+     .      .  232: 
+     .      .  233: 		if(clock_gettime(CLOCK_REALTIME,&before)==-1){perror("Gettime failed");exit(1);}
+   146    146  234: 		while (__sync_lock_test_and_set(&(spin_locks[hash]), 1));
+     .      .  235: 		if(clock_gettime(CLOCK_REALTIME,&after)==-1){perror("Gettime failed");exit(1);}
+     .      .  236: 		lock_time_per_thread[id]+=after.tv_sec*NANO_PER_SEC+after.tv_nsec
+     .      .  237: 			-before.tv_sec*NANO_PER_SEC-before.tv_nsec;
+     .      .  238: 
+     .     69  239: 		SortedListElement_t* del_elem=	
+     .      .  240: 			SortedList_lookup(&(lists[hash]),(elems+i*thread_num+id)->key);
+     .      .  241: 		if(del_elem==NULL){
+     .      .  242: 			fprintf(stderr, "can't find elems to delete\n");
+     .      .  243: 			exit(2);
+     .      .  244: 		}
+     .      .  245: 		if(SortedList_delete(del_elem)==1){
+     .      .  246: 			fprintf(stderr, "corrupted list\n");
+     .      .  247: 			exit(2);
+     .      .  248: 		};
+     .      .  249: 		__sync_lock_release(&(spin_locks[hash]));
+     .      .  250: 	}
+     .      .  251: 	return NULL;
+     .      .  252: }
+---
+     .      .  253: void output(){
+     .      .  254: 
+     .      .  255: 	int op_num=iterations*thread_num*3;
+     .      .  256: 	long ave=diff/op_num;
+     .      .  257: 	printf("list-");
+ROUTINE ====================== spin_thread_task in /w/home.13/cs/ugrad/shent/lab2b/lab2_list.c
+   487    635 Total samples (flat / cumulative)
+     .      .  196: 		}
+     .      .  197: 		pthread_mutex_unlock(&(mutexes[hash]));
+     .      .  198: 	}
+     .      .  199: 	return NULL;
+     .      .  200: }
+---
+     .      .  201: void* spin_thread_task(void* arg){
+     .      .  202: 	int id=*(int*)arg;
+     .      .  203: 	struct timespec before,after;
+     .      .  204: 
+     .      .  205: 	for(int i = 0;i<iterations;i++){
+     .      1  206: 		int hash=strlen(elems[i*thread_num+id].key)%list_num;
+     .      .  207: 
+     .      .  208: 		if(clock_gettime(CLOCK_REALTIME,&before)==-1){perror("Gettime failed");exit(1);}
+   341    341  209: 		while (__sync_lock_test_and_set(&(spin_locks[hash]), 1));
+     .      .  210: 		if(clock_gettime(CLOCK_REALTIME,&after)==-1){perror("Gettime failed");exit(1);}
+     .      .  211: 		lock_time_per_thread[id]+=after.tv_sec*NANO_PER_SEC+after.tv_nsec
+     .      .  212: 			-before.tv_sec*NANO_PER_SEC-before.tv_nsec;
+     .      .  213: 
+     .     78  214: 		SortedList_insert(&(lists[hash]),elems+i*thread_num+id);
+     .      .  215: 		__sync_lock_release(&(spin_locks[hash]));
+     .      .  216: 	}
+     .      .  217: 
+     .      .  218: 	int len=0;
+     .      .  219: 	for(int i=0;i<list_num;i++){
+     .      .  220: 		if(clock_gettime(CLOCK_REALTIME,&before)==-1){perror("Gettime failed");exit(1);}
+     .      .  221: 		while (__sync_lock_test_and_set(&(spin_locks[i]), 1));
+     .      .  222: 		if(clock_gettime(CLOCK_REALTIME,&after)==-1){perror("Gettime failed");exit(1);}
+     .      .  223: 		lock_time_per_thread[id]+=after.tv_sec*NANO_PER_SEC+after.tv_nsec
+     .      .  224: 			-before.tv_sec*NANO_PER_SEC-before.tv_nsec;
+     .      .  225: 
+     .      .  226: 		len+=SortedList_length(&(lists[i]));
+     .      .  227: 		__sync_lock_release(&(spin_locks[i]));
+     .      .  228: 	}
+     .      .  229: 
+     .      .  230: 	for(int i = 0;i<iterations;i++){
+     .      .  231: 		int hash=strlen(elems[i*thread_num+id].key)%list_num;
+     .      .  232: 
+     .      .  233: 		if(clock_gettime(CLOCK_REALTIME,&before)==-1){perror("Gettime failed");exit(1);}
+   146    146  234: 		while (__sync_lock_test_and_set(&(spin_locks[hash]), 1));
+     .      .  235: 		if(clock_gettime(CLOCK_REALTIME,&after)==-1){perror("Gettime failed");exit(1);}
+     .      .  236: 		lock_time_per_thread[id]+=after.tv_sec*NANO_PER_SEC+after.tv_nsec
+     .      .  237: 			-before.tv_sec*NANO_PER_SEC-before.tv_nsec;
+     .      .  238: 
+     .     69  239: 		SortedListElement_t* del_elem=	
+     .      .  240: 			SortedList_lookup(&(lists[hash]),(elems+i*thread_num+id)->key);
+     .      .  241: 		if(del_elem==NULL){
+     .      .  242: 			fprintf(stderr, "can't find elems to delete\n");
+     .      .  243: 			exit(2);
+     .      .  244: 		}
+     .      .  245: 		if(SortedList_delete(del_elem)==1){
+     .      .  246: 			fprintf(stderr, "corrupted list\n");
+     .      .  247: 			exit(2);
+     .      .  248: 		};
+     .      .  249: 		__sync_lock_release(&(spin_locks[hash]));
+     .      .  250: 	}
+     .      .  251: 	return NULL;
+     .      .  252: }
+---
+     .      .  253: void output(){
+     .      .  254: 
+     .      .  255: 	int op_num=iterations*thread_num*3;
+     .      .  256: 	long ave=diff/op_num;
+     .      .  257: 	printf("list-");

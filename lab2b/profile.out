@@ -1,0 +1,84 @@
+Total: 408 samples
+     383  93.9%  93.9%      408 100.0% spin_thread_task
+      21   5.1%  99.0%       21   5.1% __strcmp_sse42
+       2   0.5%  99.5%       14   3.4% SortedList_insert
+       2   0.5% 100.0%        2   0.5% _init
+       0   0.0% 100.0%       11   2.7% SortedList_lookup
+       0   0.0% 100.0%      408 100.0% __clone
+       0   0.0% 100.0%      408 100.0% start_thread
+ROUTINE ====================== spin_thread_task in /u/cs/ugrad/shent/lab2b/lab2_list.c
+   383    408 Total samples (flat / cumulative)
+     .      .  152: 		}
+     .      .  153: 		pthread_mutex_unlock(&mutex);
+     .      .  154: 	}
+     .      .  155: 	return NULL;
+     .      .  156: }
+---
+     .      .  157: void* spin_thread_task(void* arg){
+     .      .  158: 	int id=*(int*)arg;
+     .      .  159: 	for(int i = 0;i<iterations;i++){
+   304    304  160: 		while (__sync_lock_test_and_set(&spin_lock, 1));
+     .     14  161: 		SortedList_insert(&list,elems+i*thread_num+id);
+     .      .  162: 		__sync_lock_release(&spin_lock);
+     .      .  163: 	}
+     .      .  164: 	int len=SortedList_length(&list);
+     .      .  165: 	for(int i = 0;i<iterations;i++){
+    79     79  166: 		while (__sync_lock_test_and_set(&spin_lock, 1));
+     .     11  167: 		SortedListElement_t* del_elem=	
+     .      .  168: 			SortedList_lookup(&list,(elems+i*thread_num+id)->key);
+     .      .  169: 		if(del_elem==NULL){
+     .      .  170: 			fprintf(stderr, "can't find elems to delete\n");
+     .      .  171: 			exit(2);
+     .      .  172: 		}
+     .      .  173: 		if(SortedList_delete(del_elem)==1){
+     .      .  174: 			fprintf(stderr, "corrupted list\n");
+     .      .  175: 			exit(2);
+     .      .  176: 		};
+     .      .  177: 		__sync_lock_release(&spin_lock);
+     .      .  178: 	}
+     .      .  179: 	return NULL;
+     .      .  180: }
+---
+     .      .  181: 
+     .      .  182: 
+     .      .  183: void output(){
+     .      .  184: 
+     .      .  185: 	int op_num=iterations*thread_num*3;
+ROUTINE ====================== spin_thread_task in /u/cs/ugrad/shent/lab2b/lab2_list.c
+   383    408 Total samples (flat / cumulative)
+     .      .  152: 		}
+     .      .  153: 		pthread_mutex_unlock(&mutex);
+     .      .  154: 	}
+     .      .  155: 	return NULL;
+     .      .  156: }
+---
+     .      .  157: void* spin_thread_task(void* arg){
+     .      .  158: 	int id=*(int*)arg;
+     .      .  159: 	for(int i = 0;i<iterations;i++){
+   304    304  160: 		while (__sync_lock_test_and_set(&spin_lock, 1));
+     .     14  161: 		SortedList_insert(&list,elems+i*thread_num+id);
+     .      .  162: 		__sync_lock_release(&spin_lock);
+     .      .  163: 	}
+     .      .  164: 	int len=SortedList_length(&list);
+     .      .  165: 	for(int i = 0;i<iterations;i++){
+    79     79  166: 		while (__sync_lock_test_and_set(&spin_lock, 1));
+     .     11  167: 		SortedListElement_t* del_elem=	
+     .      .  168: 			SortedList_lookup(&list,(elems+i*thread_num+id)->key);
+     .      .  169: 		if(del_elem==NULL){
+     .      .  170: 			fprintf(stderr, "can't find elems to delete\n");
+     .      .  171: 			exit(2);
+     .      .  172: 		}
+     .      .  173: 		if(SortedList_delete(del_elem)==1){
+     .      .  174: 			fprintf(stderr, "corrupted list\n");
+     .      .  175: 			exit(2);
+     .      .  176: 		};
+     .      .  177: 		__sync_lock_release(&spin_lock);
+     .      .  178: 	}
+     .      .  179: 	return NULL;
+     .      .  180: }
+---
+     .      .  181: 
+     .      .  182: 
+     .      .  183: void output(){
+     .      .  184: 
+     .      .  185: 	int op_num=iterations*thread_num*3;

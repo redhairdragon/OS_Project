@@ -1,0 +1,2 @@
+#!/bin/bash
+./lab4c_tcp_exe --host=lever.cs.ucla.edu --id=123123110 --log=a 18000

@@ -1,0 +1,14 @@
+NAME: SHEN TENG
+EMAIL: REDHAIRDRAGON@UCLA.EDU
+ID: 104758168
+
+
+Makefile: Support make, make clean,make dist
+lab1a.c: Source code for lab1a
+README: This file itself
+
+The program supports 
+without option  non-canonical input mode with no echo
+--shell option  can run bash command based on the nc input mode
+^D End inputing 
+^C Stop Program

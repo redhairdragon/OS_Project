@@ -1,0 +1,2 @@
+#!/bin/bash
+./lab4c_tls_exe --host=lever.cs.ucla.edu --id=123123110 --log=log 19000

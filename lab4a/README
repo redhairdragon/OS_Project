@@ -1,0 +1,13 @@
+NAME: Shen Teng
+EMAIL: redhairdragon@ucla.edu
+ID: 104758168
+
+/dev/cu.usbserial-A903Z6S
+HWaddr 90:b6:86:10:51:b1 
+
+
+selfie.JPG: The photo I am holding the edison
+1.png: a screen shot from a USB terminal command session in connected to your system, gave it a name and configured network access.
+2.png: a screen shot from a local session in which you copy a hello world program from your laptop/desktop to your Edison.
+3.png: a screen shot from a WIFI SSH session in which you build and run a trivial program.
+4.png: a screen shot from a WIFI SSH session in which you install git and clone a reposoitory.

@@ -1,0 +1,72 @@
+# NAME: SHEN TENG
+# EMAIL: REDHAIRDRAGON@UCLA.EDU
+# ID: 104758168
+
+
+
+SortedList.h,SortedList.c:
+	files for the implementation of Sortedlist
+lab2_list.c
+	the source for a C program that compiles cleanly (with no errors or warnings), and implements the specified command line options (--threads, --iterations, --yield, --sync, --lists), drives one or more parallel threads that do operations on a shared linked list, and reports on the final list and performance.
+Makefile
+	build the program and support tests,profile,graphs,dist,clean
+lab2b_list.csv
+	data file for tests
+profile.out
+	execution profiling report showing where time was spent in the un-partitioned spin-lock implementation.
+lab2b_1.png 
+	throughput vs number of threads for mutex and spin-lock synchronized list operations.
+lab2b_2.png 
+	mean time per mutex wait and mean time per operation for mutex-synchronized list operations.
+lab2b_3.png 
+	successful iterations vs threads for each synchronization method.
+lab2b_4.png 
+	throughput vs number of threads for mutex synchronized partitioned lists.
+lab2b_5.png 
+	throughput vs number of threads for spin-lock-synchronized partitioned lists.
+run.sh
+	bash script for running the tests
+README
+	descriptions of each of the included files 
+	And answers to each questions
+
+QUESTION 2.3.1 - Cycles in the basic list implementation:
+Where do you believe most of the cycles are spent in the 1 and 2-thread list tests ?
+On list operations
+
+Why do you believe these to be the most expensive parts of the code?
+Because for 1-2 threads, there are not too many contentions happening. Most of time is spent on the critical section.
+
+Where do you believe most of the time/cycles are being spent in the high-thread spin-lock tests?
+For spin-lock tests, most of the time is being spent for spinning while other threads are working on the critical sections.
+
+Where do you believe most of the time/cycles are being spent in the high-thread mutex tests?
+For mutex tests, most of the time is spent on context switching from the implementation of mutex.
+
+QUESTION 2.3.2 - Execution Profiling:
+Where (what lines of code) are consuming most of the cycles when the spin-lock version of the list exerciser is run with a large number of threads?
+while (__sync_lock_test_and_set(&spin_lock, 1));
+
+Why does this operation become so expensive with large numbers of threads?
+With large numbers of threads, the threads which are not executing the critical section have to keep execute this line to wait the access of the lock due to the contention.
+
+QUESTION 2.3.3 - Mutex Wait Time:
+Why does the average lock-wait time rise so dramatically with the number of contending threads?
+Because each thread needs to wait more time for other threads to finish their executions.
+
+Why does the completion time per operation rise (less dramatically) with the number of contending threads?
+Because the overhead of waiting other threads to release the lock increases.
+
+
+How is it possible for the wait time per operation to go up faster (or higher) than the completion time per operation?
+Because the completion time per operation is process-wise. The lock-wait time of threads can be overlapped on different cores. The completion time doesn't reflect how each thread performs.
+
+QUESTION 2.3.4 - Performance of Partitioned Lists
+Explain the change in performance of the synchronized methods as a function of the number of lists.
+My implementation gives each list an individual lock. The separation of a single list reduces the contention between threads. The separated lists also have smaller sizes than the single list which reduces some lookup time.
+
+Should the throughput continue increasing as the number of lists is further increased? If not, explain why not.
+It may not increase. When there are enough lists, each thread have a very small chance to handle the same list which is used by the others.
+
+It seems reasonable to suggest the throughput of an N-way partitioned list should be equivalent to the throughput of a single list with fewer (1/N) threads. Does this appear to be true in the above curves? If not, explain why not.
+No. The overhead of waiting for locks and searching the long list makes the single list implementation much worse. And adding number of threads in the single list implementation will not improve too much parallism. The N-way lists have a better use of multiple threads.

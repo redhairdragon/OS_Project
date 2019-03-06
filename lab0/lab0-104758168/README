@@ -1,0 +1,31 @@
+NAME: Shen Teng
+EMAIL: redhairdragon@ucla.edu
+ID: 104758168
+
+File 
+Makefile --build,check,clean,generate tarball
+lab0.c --source file
+README --some infomation
+backtrace.png -- showing a segfault and associated stack-trace
+breakpoint.png -- showing a breakpoint and variable inspection
+
+Check
+-----Normal Case-------
+@mkdir temp
+@echo "abc"|./lab0>temp/out
+@echo "abc"|./lab0>temp/in
+@diff temp/out temp/in
+@./lab0 --input=temp/in --output=temp/out
+@diff temp/out temp/in
+@rm -r temp
+
+----Check catching segfault---
+@./lab0 --catch --segfault &> /dev/null ||[ $$? -eq 4 ]
+----Check input file error----
+@./lab0 --input=nonexist &>/dev/null ||[ $$? -eq 2 ]
+----Check unrecognized option error-----
+@./lab0 --unrecog &>/dev/null ||[ $$? -eq 1 ]
+
+
+Research on understanding getopt:
+http://www.cnblogs.com/liwei0526vip/p/4873111.html

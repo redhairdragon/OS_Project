@@ -1,0 +1,25 @@
+NAME: SHEN TENG
+EMAIL: REDHAIRDRAGON@UCLA.EDU
+ID: 104758168
+
+lab1b-client.c: client program 
+It will send data to server and receive data to server.
+support:
+--log file_name: record data received and sent in the file
+--port port_num: port number has to be specified
+--encrypt keyfile: encrypt data with the content in keyfile
+
+lab1b-server.c: server program
+It will execute bash and transmit output to client using the input from client
+support:
+--port port_num: port number has to be specified
+--encrypt keyfile: encrypt data with the content in keyfile
+
+Makefile
+make:generate executable
+make clean: remove files generated
+make dist: generate tarball file
+
+README: This file
+
+my.key: the key I used for testing encryption

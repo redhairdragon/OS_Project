@@ -1,0 +1,61 @@
+NAME: SHEN TENG
+EMAIL: REDHAIRDRAGON@UCLA.EDU
+ID: 104758168
+
+*.png: Plots generate by make graphs
+lab2_add.c: add to a shared variable. support --sync=s/m/c --threads=# --yield --iterations=#
+SortedList.h: a header file describing the interfaces for linked list operations.
+SortedList.c: a C module that implements insert, delete, lookup, and length methods for a sorted doubly linked list.
+lab2_list.c: operate on a shared list. support --sync=s/m --threads=# --yield=[idl] --iterations=#
+Makefile: support 
+	build: create exe files
+	tests: run tests and generate file for graphs
+	graphs: plot graphs
+	dist: tarball files
+	clean: remove generated files
+lab2_add.csv: containing all of your results for all of the add tests.
+lab2_list.csv: containing all of your results for all of the list tests.
+README: this file
+
+Answers to questions:
+2.1.1
+Why does it take many iterations before errors are seen?
+The race condition appears when different threads are writing to the same variable. 
+For threads==1, it never failed.
+For threads>1, when there are more threads and iterations,the chance that the thread switchings happen in the middle of the critical section is higher.
+
+Why does a significantly smaller number of iterations so seldom fail?
+Because the time spent in the critical section is so tiny that the race condition rarely happen in these cases.
+
+2.1.2
+Why are the --yield runs so much slower?
+sched_yield(2) is a system call which increases overhead of context switching between kernel moade and user mode.
+
+Where is the additional time going?
+The context switching between kernel moade and user mode.
+
+Is it possible to get valid per-operation timings if we are using the --yield option?
+No. The system call adds overhead to our measurement.
+
+2.1.3
+Why does the average cost per operation drop with increasing iterations?
+Because for small numbers of iterations, the preparation of starting a program takes the majority of the time.
+
+If the cost per iteration is a function of the number of iterations, how do we know how many iterations to run (or what the "correct" cost is)?
+Make the number of iterations large so that we can see where the slope becomes 0. 
+
+2.1.4
+Why do all of the options perform similarly for low numbers of threads?
+For low numbers of threads, the wait time of every thread for all methods are relatively small. The implementations of locks don't affect too much in this case.
+
+Why do the three protected operations slow down as the number of threads rises?
+Due to the increasing number of threads, the time spent on waiting the locked threads to spin, CAS, and context switch(mutex) takes longer.
+
+2.2.1
+The general shapes of the curves are growing since the time spent on waiting the lock releases.
+The curve of adding starts to drop down when the number threads becomes big. But the curve of list keeps growing. It might be because when the list is long, each thread takes more time to finish. But the add is a relatively simple task.
+
+2.2.2
+Both curves grows as the number of threads increase since the time spent on waiting the lock releases. 
+Although the curve of mutex is genrally higher, its rate of increase is smaller than the curve of spins. It is because the spin takes more time when there are more threads to wait. But the mutex simply put the waiting threads to sleep, so its slope is steady.
+

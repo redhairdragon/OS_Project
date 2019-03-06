@@ -1,0 +1,12 @@
+NAME: Shen Teng
+EMAIL: redhairdragon@ucla.edu
+ID: 104758168
+
+lab3b: python script for this lab
+*.py: python files containing different objects required for lab3b script
+README: This file
+Makefile: 
+	dist: get tar ball file 
+	clean: remove unnecessary files
+
+For this lab, I was trying to do it in a more OOP style. Not sure if that makes everything better. It can be more organized if i have more time.

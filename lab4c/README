@@ -1,0 +1,9 @@
+NAME: Shen Teng
+EMAIL: redhairdragon@ucla.edu
+ID: 104758168
+
+Makefile: support make, make clean, make dist
+README: Brief description of files 
+*.c Source file for building exe files
+
+In lab4b, for Input,I read one character at once. But in this lab, it seems that the internet connections introduce a huge lag if the method getting input stays the same. And for socket, the commands come in line by line which is better to read multiple characters at once. It is also easier to implement.
